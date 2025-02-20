@@ -14,10 +14,41 @@
     <h1>Lord Of The Redirects</h1>
     <h2 class="cit">One Redirect to rule them all, One Redirect to find them, One Redirect to bring them all, and through the browser guide them.</h2>
 
+    <div class="accordion">
+      <button class="accordion-btn" id="accordion-btn">▼ Supported URL Formats</button>
+      <div class="accordion-content">
+        <p>You can use the following formats for URLs:</p>
+    
+        <h3>✅ Direct URLs</h3>
+        <p>Use an exact URL to match and redirect a specific request.</p>
+    
+        <p><strong>Example:</strong></p>
+        <ul>
+          <li><strong>Rule:</strong> <code>https://example.com/script.js</code></li>
+          <li><strong>Matches only this file:</strong> <code>https://example.com/script.js</code></li>
+        </ul>
+    
+        <h3>✅ Wildcard Matching (*)</h3>
+        <p>Use wildcards to match multiple URLs with a common pattern.</p>
+    
+        <p><strong>Example:</strong></p>
+        <ul>
+          <li><strong>Rule:</strong> <code>https://*example.com/script.js*</code></li>
+          <li><strong>Matches files like these:</strong>
+            <ul>
+              <li><code>https://www.example.com/script.js</code></li>
+              <li><code>https://example.com/script.js?v=123</code></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
     <div class="box">
-      <h3>Redirects List</h3>
-  
       <div id="alert-container"></div>
+
+      <h3>Redirects List</h3>
       
       <div id="rule-list"></div>
       
