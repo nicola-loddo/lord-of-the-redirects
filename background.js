@@ -20,6 +20,26 @@ function setRules(redirectRules=[], isExtensionActive) {
         rules.push(rule)
       }
     })
+
+    chrome.action.setIcon({
+      path: {
+        "16": "icons/icon_on_16.png",
+        "32": "icons/icon_on_32.png",
+        "48": "icons/icon_on_48.png",
+        "128": "icons/icon_on_128.png"
+      }
+    });
+  }
+  else {
+    chrome.action.setIcon({
+      path: {
+        "16": "icons/icon_off_16.png",
+        "32": "icons/icon_off_32.png",
+        "48": "icons/icon_off_48.png",
+        "128": "icons/icon_off_128.png"
+      }
+    });
+
   }
 
   chrome.declarativeNetRequest.getDynamicRules((oldRules) => {
