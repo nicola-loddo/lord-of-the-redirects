@@ -1,0 +1,85 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 20px;
+    width: 500px;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    margin: auto;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    accent-color: #4CAF50;
+}
+
+.checkbox-label {
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+}
+
+.options-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 16px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.options-link:hover {
+    color: #0056b3;
+}
+
+footer {
+    margin-top: 30px;
+}
+
+.github-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+.github-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    fill: currentColor;
+}
+
+.github-link:hover {
+    color: #000;
+}
