@@ -1,0 +1,177 @@
+body {
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    max-width: 800px;
+    padding: 50px;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.box {
+    width: 80%;
+    max-width: 800px;
+    padding: 50px;
+    margin: 50px auto 0;
+    background-color: white;
+    border-radius: 8px;
+    border: solid 1px #e3e3e3;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.cit {
+    text-align: center;
+    font-style: italic;
+    font-weight: 400;
+    font-family: ui-serif;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+#rule-list {
+    margin-top: 20px;
+}
+
+.rule {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    padding: 20px 10px;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.rule-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Stile personalizzato per la checkbox e la label */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+    margin-right: 20px;
+    cursor: pointer;
+    accent-color: #4CAF50;
+    /* Cambia il colore della checkbox quando selezionata */
+}
+
+.checkbox-label {
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Hover effect for label */
+.checkbox-label:hover {
+    color: #4CAF50;
+}
+
+.rule .trash {
+    width: 60px;
+    height: 25px;
+}
+
+.rule .trash:hover {
+    cursor: pointer;
+}
+
+.rule-fields {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.rule .rule-name {
+    padding-bottom: 10px;
+}
+
+
+.rule .rule-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    background-color: #fafafa;
+    width: 100%;
+}
+
+
+.rule input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 0 10px;
+}
+
+.rule input[name="name"] {
+    flex-grow: 1;
+}
+
+.rule input[name="to"],
+.rule input[name="from"] {
+    width: 48%;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.alert {
+    margin-top: 10px;
+    display: none;
+    /* Initially hidden */
+    padding: 10px;
+    background-color: #45a049;
+    color: white;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.footer-note {
+    margin-top: 50px;
+    text-align: center;
+}
