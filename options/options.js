@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let ruleListDiv = document.getElementById("rule-list");
+  let accordionBtn = document.getElementById("accordion-btn");
   document.getElementById("add-rule").addEventListener("click", addRule);
   document.getElementById("save-btn").addEventListener("click", saveRules);
 
@@ -64,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     alertDiv.style.display = "block";
 
     setTimeout(() => {
-      alertDiv.style.display = "none";
+      alertDiv.remove();
     }, 3000);
   }
 
@@ -121,4 +122,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+
+  function toggleAccordion() {
+    var content = document.querySelector(".accordion-content");
+    var button = document.querySelector(".accordion-btn");
+
+    if (content.style.display === "block") {
+      content.style.display = "none";
+      button.innerHTML = "▼ Supported URL Formats";
+    } else {
+      content.style.display = "block";
+      button.innerHTML = "▲ Supported URL Formats";
+    }
+  }
+
+  accordionBtn.addEventListener("click", toggleAccordion);
 });
