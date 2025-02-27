@@ -12,25 +12,26 @@
   <div class="container">
 
     <h1>Lord Of The Redirects</h1>
-    <h2 class="cit">One Redirect to rule them all, One Redirect to find them, One Redirect to bring them all, and through the browser guide them.</h2>
+    <h2 class="cit">One Redirect to rule them all, One Redirect to find them, One Redirect to bring them all, and
+      through the browser guide them.</h2>
 
     <div class="accordion">
       <button class="accordion-btn" id="accordion-btn">▼ Supported URL Formats</button>
       <div class="accordion-content">
         <p>You can use the following formats for URLs:</p>
-    
+
         <h3>✅ Direct URLs</h3>
         <p>Use an exact URL to match and redirect a specific request.</p>
-    
+
         <p><strong>Example:</strong></p>
         <ul>
           <li><strong>Rule:</strong> <code>https://example.com/script.js</code></li>
           <li><strong>Matches only this file:</strong> <code>https://example.com/script.js</code></li>
         </ul>
-    
+
         <h3>✅ Wildcard Matching (*)</h3>
         <p>Use wildcards to match multiple URLs with a common pattern.</p>
-    
+
         <p><strong>Example:</strong></p>
         <ul>
           <li><strong>Rule:</strong> <code>https://*example.com/script.js*</code></li>
@@ -46,29 +47,42 @@
 
 
     <div class="box">
-      <div id="alert-container"></div>
-
-      <h3>Redirects List</h3>
-      
-      <div id="rule-list"></div>
-      
-      <div class="actions">
+      <div class="box-header">
+        <h3>Redirects List</h3>
         <button id="add-rule">Add Rule</button>
-        <button id="save-btn">Save</button>
       </div>
+
+      <div id="rule-list-container"></div>
+
     </div>
 
     <p class="footer-note">
-      If you, too, feel lost without Redirector, don’t worry!<br/>
+      If you, too, feel lost without Redirector, don’t worry!<br />
       Lord of the Requests (LOTR) is here to help you create simple redirects.<br /><br />
-      
+
       Currently, the extension is still in beta and supports only redirects for JS files, but new features will be added
       soon.<br /><br />
-      
-      For feature requests, bug reports, or any other feedback, feel free to contact me on <a href="https://github.com/nicola-loddo/lord-of-the-redirects" target="_blank">GitHub</a>.
+
+      For feature requests, bug reports, or any other feedback, feel free to contact me on <a
+        href="https://github.com/nicola-loddo/lord-of-the-redirects" target="_blank">GitHub</a>.
     </p>
   </div>
 
+  <div id="alert-container"></div>
+
+  <div id="modal" class="modal-background">
+    <div class="modal-block">
+      <span class="modal-close">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
+          viewBox="0 0 16 16">
+          <path
+            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+        </svg>
+      </span>
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
 
 
   <script src="options.js"></script>
