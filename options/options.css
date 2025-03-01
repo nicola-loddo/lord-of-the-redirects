@@ -16,9 +16,17 @@
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+* {
+    box-sizing: border-box;
+}
+
+.hide {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 body {
     font-family: var(--font-family);
-    box-sizing: border-box;
     margin: 0;
     padding: var(--space-max);
     display: flex;
@@ -40,12 +48,17 @@ body {
 }
 
 .box {
+    width: 100%;
     border: solid 1px var(--gray-medium);
 }
 
 h1 {
     text-align: center;
     color: var(--gray-dark);
+}
+
+h3 {
+    font-size: 20px;
 }
 
 .cit {
@@ -152,7 +165,7 @@ h1 {
     color: var(--red-hover)
 }
 
-.rule {
+.rule-form {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -198,13 +211,13 @@ label {
     color: var(--primary-color);
 }
 
-.rule-row {
+.rule-form-row {
     width: 100%;
     display: flex;
     justify-content: space-between;
 }
 
-.rule-fields {
+.rule-form-fields {
     display: flex;
     justify-content: space-between;
     align-items: start;
@@ -212,7 +225,7 @@ label {
     width: 100%;
 }
 
-.rule-field {
+.rule-form-field {
     padding: var(--space-min);
     width: 100%;
     text-align: left;
@@ -220,15 +233,12 @@ label {
     align-items: center;
 }
 
-.rule-field label {
+.rule-form-field label {
     width: 100px;
 }
 
-.rule-field input {
+.rule-form-field input {
     width: 100%;
-}
-
-.rule input {
     padding: 8px;
     font-size: 14px;
     border: 1px solid var(--gray-medium);

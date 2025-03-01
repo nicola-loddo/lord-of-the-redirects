@@ -38,6 +38,69 @@ function initModal() {
 
 const modal = initModal();
 
+async function getStoredRules() {
+  let rules = [];
+  let storedData = await chrome.storage.sync.get("redirectRules");
+  if (storedData && storedData.redirectRules) {
+    rules = storedData.redirectRules
+  }
+  return rules;
+}
+
+async function saveRule(rule, isAnUpdate) {
+  if (rule) {
+    let rules = await getStoredRules();
+
+    if (isAnUpdate) {
+      rules.forEach((r, idx) => {
+        if (r.id == rule.id) {
+          rules[idx] = rule
+        }
+      })
+    }
+    else {
+      rules.push(rule)
+    }
+
+    await chrome.storage.sync.set({ redirectRules: rules });
+
+    printStoredRules();
+
+    showAlert(isAnUpdate ? "Rule Successfully Updated!" : "Rule Successfully Created!");
+  }
+  else {
+    showAlert("No Rule Provided!", "error");
+  }
+
+  modal.close();
+}
+
+async function deleteRule(ruleId) {
+  if (ruleId) {
+    if (!window.confirm("Are you sure you want to delete this rule?")) {
+      return;
+    }
+
+    let rules = await getStoredRules();
+
+    rules = rules.filter(function (rule) {
+      return rule.id != ruleId;
+    });
+
+    await chrome.storage.sync.set({ redirectRules: rules });
+
+    showAlert("Rule Successfully Deleted!");
+
+    let item = document.querySelector(`[data-rule-id="${ruleId}"]`);
+    if (item) {
+      item.remove()
+    }
+  }
+  else {
+    showAlert("No Valid id Rule Provided!", "error");
+  }
+}
+
 function getCheckedMarkup(isChecked) {
   if (isChecked) {
     return
@@ -106,7 +169,6 @@ function generateRuleItemMarkup(rule) {
       let ruleId = item.getAttribute("data-rule-id");
 
       await deleteRule(ruleId)
-      item.remove()
     })
     
     editBtn.addEventListener("click", e => {
@@ -132,65 +194,6 @@ function generateRuleList(rules) {
   return rulesList;
 }
 
-async function getStoredRules() {
-  return await chrome.storage.sync.get("redirectRules");
-}
-
-async function saveRule(rule, isAnUpdate) {
-  if (rule) {
-    let rules = [];
-    let storedRules = await getStoredRules();
-
-    if (storedRules.redirectRules) {
-      rules = storedRules.redirectRules;
-    }
-  
-    if (isAnUpdate) {
-      rules.forEach((r, idx) => {
-        if (r.id == rule.id) {
-          rules[idx] = rule
-        }
-      }) 
-    }
-    else {
-      rules.push(rule)
-    }
-
-    await chrome.storage.sync.set({ redirectRules: rules });
-
-    printStoredRules();
-
-    showAlert(isAnUpdate ? "Rule Successfully Updated!" : "Rule Successfully Created!");
-  } 
-  else {
-    showAlert("No Rule Provided!", "error");
-  }
-
-  modal.close();
-}
-
-async function deleteRule(ruleId) {
-  if (ruleId) {
-    let rules = [];
-    let storedRules = await getStoredRules();
-
-    if (storedRules.redirectRules) {
-      rules = storedRules.redirectRules;
-    }
-
-    rules = rules.filter(function (rule) {
-      return rule.id != ruleId;
-    });
-
-    await chrome.storage.sync.set({ redirectRules: rules });
-
-    showAlert("Rule Successfully Deleted!");
-  }
-  else {
-    showAlert("No Valid id Rule Provided!", "error");
-  }
-}
-
 
 // CREATE RULE FORM
 function createRuleForm(ruleData) {
@@ -198,39 +201,41 @@ function createRuleForm(ruleData) {
   ruleData = ruleData ? ruleData : {};
 
   const ruleDiv = document.createElement("div");
-  ruleDiv.classList.add("rule");
   let ruleId = ruleData.id ? ruleData.id : (new Date()).getTime()
   let row = `
-      <input type="hidden" name="id" value="${ruleId}">
-      <div class="rule-row">
-        <div class="rule-fields">
-          <div class="rule-field">
-            <label>Name</label>
-            <input type="text" name="name" placeholder="My Custom JS" ${ruleData.name ? 'value="' + ruleData.name + '"' : ""}>
-          </div>
-          
-          <div class="rule-field">
-            <label>From</label>
-            <input type="text" name="from" placeholder="https://example.com/my-script.js" ${ruleData.from ? 'value="' + ruleData.from + '"' : ""}>
-          </div>
-          
-          <div class="rule-field">
-            <label>To</label>
-            <input type="text" name="to" placeholder="http://localhost/my-script.js" ${ruleData.name ? 'value="' + ruleData.to + '"' : ""}>
-          </div>
-          
-          <div class="rule-field">
-            <div class="checkbox-container">
-              <label for="is-active" class="checkbox-label">Active</label>
-              <input type="checkbox" name="is-active" id="is-active" class="checkbox" ${ruleData.isActive ? "checked" : ""}>
+      <div class="rule-form">
+        <h3>${isAnUpdate ? "Edit" : "Add"} Rule</h3>
+        <input type="hidden" name="id" value="${ruleId}">
+        <div class="rule-form-row">
+          <div class="rule-form-fields">
+            <div class="rule-form-field">
+              <label>Name*</label>
+              <input type="text" name="name" placeholder="My Custom JS" ${ruleData.name ? 'value="' + ruleData.name + '"' : ""}>
+            </div>
+            
+            <div class="rule-form-field">
+              <label>From*</label>
+              <input type="text" name="from" placeholder="https://example.com/my-script.js" ${ruleData.from ? 'value="' + ruleData.from + '"' : ""}>
+            </div>
+            
+            <div class="rule-form-field">
+              <label>To*</label>
+              <input type="text" name="to" placeholder="http://localhost/my-script.js" ${ruleData.name ? 'value="' + ruleData.to + '"' : ""}>
+            </div>
+            
+            <div class="rule-form-field">
+              <div class="checkbox-container">
+                <label for="is-active" class="checkbox-label">Active</label>
+                <input type="checkbox" name="is-active" id="is-active" class="checkbox" ${ruleData.isActive ? "checked" : ""}>
+              </div>
             </div>
           </div>
-        </div>
 
-      </div>
-      <div class="rule-row actions">
-        <button id="delete-rule" class="red">Delete</button>
-        <button id="save-rule">Save</button>
+        </div>
+        <div class="rule-form-row actions">
+          <button id="delete-rule" class="red">Delete</button>
+          <button id="save-rule">Save</button>
+        </div>
       </div>
     `;
 
@@ -258,6 +263,15 @@ function createRuleForm(ruleData) {
       await saveRule(newRule, isAnUpdate)
     }
   })
+
+  deleteRuleBtn.addEventListener("click", async (e) => {
+    const id = idField.value;
+    
+    if (id) {
+      await deleteRule(id)
+      modal.close()
+    }
+  })
 }
 
 // Function to show the "done" alert
@@ -276,7 +290,7 @@ function showAlert(message, type="success") {
   setTimeout(() => {
     alertContainer.classList.remove("show")
     alertDiv.remove();
-  }, 2000);
+  }, 1500);
 }
 
 function toggleAccordion() {
@@ -297,8 +311,8 @@ async function printStoredRules() {
   ruleListDiv.innerHTML = "";
 
   let storedRules = await getStoredRules();
-  if (storedRules && storedRules.redirectRules) {
-    let ruleList = generateRuleList(storedRules.redirectRules);
+  if (storedRules.length) {
+    let ruleList = generateRuleList(storedRules);
     ruleListDiv.append(ruleList)
   }
 }

@@ -1,10 +1,60 @@
-function setRules(redirectRules=[], isExtensionActive) {
+let storedData = {
+  redirectRules: [],
+  isExtensionActive: false,
+  getStoredData: async function () {
+    storedData.redirectRules = await getStoredRules();
+    storedData.isExtensionActive = await isExtensionActive();
+  }
+}
+
+async function getStoredRules() {
+  let rules = [];
+  let storedData = await chrome.storage.sync.get("redirectRules");
+  if (storedData && storedData.redirectRules) {
+    rules = storedData.redirectRules
+  }
+  return rules;
+}
+
+async function isExtensionActive() {
+  let result = false;
+  let storedData = await chrome.storage.sync.get("isExtensionActive");
+  result = storedData.isExtensionActive ? true : false
+  return result;
+}
+
+
+function normalizeMatchingRule(rule) {
+  if (!rule) {
+    return null;
+  }
+  if (rule.patternType == "regex") {
+    return rule;
+  } else { //Convert wildcard to regex pattern
+    var converted = '^';
+    for (var i = 0; i < rule.length; i++) {
+      var ch = rule.charAt(i);
+      if ('()[]{}?.^$\\+'.indexOf(ch) != -1) {
+        converted += '\\' + ch;
+      } else if (ch == '*') {
+        converted += '(.*?)';
+      } else {
+        converted += ch;
+      }
+    }
+    converted += '$';
+    return converted;
+  }
+}
+
+function setRules(redirectRules = [], isExtensionActive) {
   const rules = [];
 
   if (isExtensionActive) {
     redirectRules.forEach((redirectRule, idx) => {
       if (redirectRule.isActive && redirectRule.from && redirectRule.to) {
-  
+        redirectRule.from = normalizeMatchingRule(redirectRule.from);
+        console.log
         const rule = {
           "id": idx + 1,
           "priority": 1,
@@ -13,7 +63,7 @@ function setRules(redirectRules=[], isExtensionActive) {
             "redirect": { "url": redirectRule.to }
           },
           "condition": {
-            "urlFilter": redirectRule.from,
+            "regexFilter": redirectRule.from,
             "resourceTypes": ["script"]
           }
         }
@@ -57,27 +107,24 @@ function setRules(redirectRules=[], isExtensionActive) {
   });
 }
 
+chrome.runtime.onStartup.addListener(async () => {
+  await storedData.getStoredData();
+  setRules(storedData.redirectRules, storedData.isExtensionActive)
 
-chrome.storage.sync.get(["redirectRules", "isExtensionActive"], (data) => {
-  let isExtensionActive = data.isExtensionActive !== false;
-  console.log("firstGet", data.redirectRules, isExtensionActive)
-
-  setRules(data.redirectRules, isExtensionActive)
-});
-
-// on change event
-chrome.storage.onChanged.addListener((changes) => {
-  console.log("onChange", changes)
-  if (changes.isExtensionActive) {
-    chrome.storage.sync.get(["redirectRules"], (data) => {
-      console.log("onChange - isExtensionActive", changes.isExtensionActive.newValue, data.redirectRules)
-      setRules(data.redirectRules, changes.isExtensionActive.newValue)
-    });
-  }
-  else if (changes.redirectRules) {
-    chrome.storage.sync.get(["isExtensionActive"], (data) => {
-      console.log("onChange - redirectRules", changes.redirectRules.newValue, data.isExtensionActive)
-      setRules(changes.redirectRules.newValue, data.isExtensionActive)
-    });
-  }
+  // on change event
+  chrome.storage.onChanged.addListener((changes) => {
+    console.log("onChange", changes)
+    if (changes.isExtensionActive) {
+      chrome.storage.sync.get(["redirectRules"], (data) => {
+        console.log("onChange - isExtensionActive", changes.isExtensionActive.newValue, data.redirectRules)
+        setRules(data.redirectRules, changes.isExtensionActive.newValue)
+      });
+    }
+    else if (changes.redirectRules) {
+      chrome.storage.sync.get(["isExtensionActive"], (data) => {
+        console.log("onChange - redirectRules", changes.redirectRules.newValue, data.isExtensionActive)
+        setRules(changes.redirectRules.newValue, data.isExtensionActive)
+      });
+    }
+  });
 });
