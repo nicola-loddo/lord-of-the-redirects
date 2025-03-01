@@ -47,10 +47,33 @@ async function getStoredRules() {
   return rules;
 }
 
-async function saveRule(rule, isAnUpdate) {
-  if (rule) {
-    let rules = await getStoredRules();
+async function saveRules(rules, message) {
+  if (rules) {
+    await chrome.storage.sync.set({ redirectRules: rules });
 
+    printStoredRules();
+
+    if (message) {
+      showAlert(message);
+    }
+  }
+  else {
+    showAlert("No Rules Provided!", "error");
+  }
+
+  modal.close();
+}
+
+async function importRules(rules=[]) {  
+  let storedRules = await getStoredRules();
+  storedRules = storedRules.concat(rules)
+  saveRules(storedRules, "Rules Successfully Imported!")
+}
+
+async function saveRule(rule, isAnUpdate) {
+  let rules = await getStoredRules();
+
+  if (rule) {
     if (isAnUpdate) {
       rules.forEach((r, idx) => {
         if (r.id == rule.id) {
@@ -61,18 +84,11 @@ async function saveRule(rule, isAnUpdate) {
     else {
       rules.push(rule)
     }
-
-    await chrome.storage.sync.set({ redirectRules: rules });
-
-    printStoredRules();
-
-    showAlert(isAnUpdate ? "Rule Successfully Updated!" : "Rule Successfully Created!");
   }
-  else {
-    showAlert("No Rule Provided!", "error");
-  }
+  
+  let message = isAnUpdate ? "Rule Successfully Updated!" : "Rule Successfully Created!"
 
-  modal.close();
+  saveRules(rules, message)
 }
 
 async function deleteRule(ruleId) {
@@ -317,15 +333,49 @@ async function printStoredRules() {
   }
 }
 
-
-
 document.addEventListener("DOMContentLoaded", async () => {
   let accordionBtn = document.getElementById("accordion-btn");
   let addRuleBtn = document.getElementById("add-rule");
+  let exportRulesBtn = document.getElementById("export-rules");
+  let importRulesBtn = document.getElementById("import-rules-button");
+  let importRulesField = document.getElementById("import-rules");
 
   addRuleBtn.addEventListener("click", () => { createRuleForm() });
 
   accordionBtn.addEventListener("click", toggleAccordion);
 
   printStoredRules();
+
+
+  importRulesBtn.addEventListener("click", function () {
+    importRulesField.click();
+  });
+
+  importRulesField.addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        const jsonData = JSON.parse(e.target.result);
+        await importRules(jsonData)
+      };
+      reader.readAsText(file);
+    }
+  });
+
+  exportRulesBtn.addEventListener("click", async function () {
+    let storedRules = await getStoredRules();
+    const jsonStr = JSON.stringify(storedRules);
+
+    const blob = new Blob([jsonStr], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = url;
+    a.setAttribute("download", "export.json");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
 });

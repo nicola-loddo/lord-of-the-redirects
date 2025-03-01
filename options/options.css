@@ -74,6 +74,11 @@ h3 {
     align-items: center;
 }
 
+.rules-import-export-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
 #rule-list-container {
     margin-top: var(--space);
 }
