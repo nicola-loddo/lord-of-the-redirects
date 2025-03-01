@@ -136,3 +136,5 @@ async function init() {
 
 chrome.runtime.onStartup.addListener(init);
 chrome.runtime.onInstalled.addListener(init);
+
+console.log("lotr background.js is working!")

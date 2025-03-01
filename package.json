@@ -4,13 +4,15 @@
   "description": "LOTR - Lord Of The Redirects",
   "type": "module",
   "scripts": {
-    "dev": "rollup -cw"
+    "dev": "rollup -cw",
+    "build": "rollup -c && node create_extension_dist_bundle.js"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",
     "rollup": "^4.34.9",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-delete": "^3.0.0",
-    "rollup-plugin-watch-assets": "^1.0.1"
+    "rollup-plugin-watch-assets": "^1.0.1",
+    "zip-a-folder": "^3.1.8"
   }
 }
