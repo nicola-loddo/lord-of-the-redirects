@@ -47,6 +47,29 @@ function normalizeMatchingRule(rule) {
   }
 }
 
+function setIcon(isExtensionActive) {
+  if (isExtensionActive) {
+    chrome.action.setIcon({
+      path: {
+        "16": "../../icons/icon_on_16.png",
+        "32": "../../icons/icon_on_32.png",
+        "48": "../../icons/icon_on_48.png",
+        "128": "../../icons/icon_on_128.png"
+      }
+    });
+  }
+  else {
+    chrome.action.setIcon({
+      path: {
+        "16": "../../icons/icon_off_16.png",
+        "32": "../../icons/icon_off_32.png",
+        "48": "../../icons/icon_off_48.png",
+        "128": "../../icons/icon_off_128.png"
+      }
+    });
+  }
+}
+
 function setRules(redirectRules = [], isExtensionActive) {
   const rules = [];
 
@@ -54,7 +77,6 @@ function setRules(redirectRules = [], isExtensionActive) {
     redirectRules.forEach((redirectRule, idx) => {
       if (redirectRule.isActive && redirectRule.from && redirectRule.to) {
         redirectRule.from = normalizeMatchingRule(redirectRule.from);
-        console.log
         const rule = {
           "id": idx + 1,
           "priority": 1,
@@ -70,27 +92,9 @@ function setRules(redirectRules = [], isExtensionActive) {
         rules.push(rule)
       }
     })
-
-    chrome.action.setIcon({
-      path: {
-        "16": "icons/icon_on_16.png",
-        "32": "icons/icon_on_32.png",
-        "48": "icons/icon_on_48.png",
-        "128": "icons/icon_on_128.png"
-      }
-    });
   }
-  else {
-    chrome.action.setIcon({
-      path: {
-        "16": "icons/icon_off_16.png",
-        "32": "icons/icon_off_32.png",
-        "48": "icons/icon_off_48.png",
-        "128": "icons/icon_off_128.png"
-      }
-    });
-
-  }
+  
+  setIcon(isExtensionActive)
 
   chrome.declarativeNetRequest.getDynamicRules((oldRules) => {
     // reset old rules
@@ -107,13 +111,14 @@ function setRules(redirectRules = [], isExtensionActive) {
   });
 }
 
-chrome.runtime.onStartup.addListener(async () => {
+async function init() {
   await storedData.getStoredData();
   setRules(storedData.redirectRules, storedData.isExtensionActive)
 
   // on change event
   chrome.storage.onChanged.addListener((changes) => {
     console.log("onChange", changes)
+
     if (changes.isExtensionActive) {
       chrome.storage.sync.get(["redirectRules"], (data) => {
         console.log("onChange - isExtensionActive", changes.isExtensionActive.newValue, data.redirectRules)
@@ -127,4 +132,7 @@ chrome.runtime.onStartup.addListener(async () => {
       });
     }
   });
-});
+}
+
+chrome.runtime.onStartup.addListener(init);
+chrome.runtime.onInstalled.addListener(init);

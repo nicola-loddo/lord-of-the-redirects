@@ -10,10 +10,10 @@
     "<all_urls>"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "build/background/background.js"
   },
   "action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "build/popup/popup.html",
     "default_title": "LOTR - Lord Of The Redirect",
     "default_icon": {
       "16": "icons/icon_off_16.png",
@@ -22,7 +22,7 @@
       "128": "icons/icon_off_128.png"
     }
   },
-  "options_page": "options/options.html",
+  "options_page": "build/options/options.html",
   "declarative_net_request": {
     "rule_resources": [
       {
