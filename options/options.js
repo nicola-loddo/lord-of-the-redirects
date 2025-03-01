@@ -131,18 +131,19 @@ function getCheckedMarkup(isChecked) {
 }
 
 function getRuleIdFromActionElementClicked(e) {
-  return e.target.closest('.rule-item');
+  return e.target.closest('.rule-item-container');
 }
 
 function generateRuleItemMarkup(rule) {
   if (rule) {
     let ruleItem = document.createElement("div");
     ruleItem.rule = rule;
-    ruleItem.classList.add("rule-item");
+    ruleItem.classList.add("rule-item-container");
     ruleItem.setAttribute("data-rule-id", rule.id);
 
     let ruleItemContent = `
-        <div class="rule-item-container">
+        <div class="rule-drag-handle">⠿</div>
+        <div class="rule-item">
           <div class="rule-item-content">
             <h3>
               <span class="${rule.isActive ? 'rule-active' : 'rule-not-active'}">${rule.isActive 
@@ -322,6 +323,64 @@ function toggleAccordion() {
   }
 }
 
+function handleDragAndDropRuleItems() {
+  const list = document.querySelector(".rules-list");
+  let draggedItem = null;
+
+  function onItemReordered(movedItem, targetItem) {
+    console.log(`Elemento spostato: ${movedItem.dataset.ruleId} -> Posizione di: ${targetItem.dataset.ruleId}`);
+  }
+
+  document.querySelectorAll(".rule-item-container").forEach((item) => {
+    const dragButton = item.querySelector(".rule-drag-handle");
+    // Imposta l'elemento come draggable solo se si preme il pulsante
+    dragButton.addEventListener("mousedown", function (e) {
+      item.setAttribute("draggable", "true");
+    });
+
+    item.addEventListener("dragstart", function () {
+      draggedItem = this;
+      setTimeout(() => (this.style.display = "none"), 0);
+    });
+
+    item.addEventListener("dragend", function () {
+      setTimeout(() => {
+        draggedItem.style.display = "flex";
+        draggedItem = null;
+        this.setAttribute("draggable", "false"); // Disattiva drag dopo il rilascio
+      }, 0);
+    });
+
+    item.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      this.classList.add("dd-active-border")
+    });
+    
+    item.addEventListener("dragleave", function () {
+      this.classList.remove("dd-active-border")
+    });
+    
+    item.addEventListener("drop", function (e) {
+      e.preventDefault();
+      this.classList.remove("dd-active-border")
+
+      if (draggedItem) {
+        let allItems = [...list.querySelectorAll(".rule-item-container")];
+        let currentIndex = allItems.indexOf(this);
+        let draggedIndex = allItems.indexOf(draggedItem);
+
+        if (currentIndex > draggedIndex) {
+          this.after(draggedItem);
+        } else {
+          this.before(draggedItem);
+        }
+
+        onItemReordered(draggedItem, this);
+      }
+    });
+  });
+}
+
 async function printStoredRules() {
   let ruleListDiv = document.getElementById("rule-list-container");
   ruleListDiv.innerHTML = "";
@@ -331,6 +390,8 @@ async function printStoredRules() {
     let ruleList = generateRuleList(storedRules);
     ruleListDiv.append(ruleList)
   }
+
+  handleDragAndDropRuleItems()
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -379,3 +440,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     URL.revokeObjectURL(url);
   });
 });
+

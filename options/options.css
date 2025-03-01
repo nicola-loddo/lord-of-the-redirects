@@ -83,42 +83,59 @@ h3 {
     margin-top: var(--space);
 }
 
-.rule-item {
+.rule-item-container {
     padding: var(--space);
     margin-bottom: var(--space);
     border: 1px solid var(--gray-medium);
     border-radius: var(--border-radius);
-}
-
-.rule-item-container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
-.rule-item-container h3 {
+.rule-drag-handle {
+    cursor: grab;
+    font-size: 20px;
+    padding: 5px;
+    margin-right: 10px;
+    user-select: none;
+}
+
+.rule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.rule-item h3 {
     display: flex;
     align-items: center;
     line-height: 1;
 }
 
-.rule-item-container h3 span {
+.rule-item h3 span {
     padding-right: var(--space-min);
     font-size: 20px;
 }
 
-.rule-item-container h3 span svg {
+.rule-item h3 span svg {
     width: 30px;
     height: 30px;
 }
 
-.rule-item-container h3 span svg {
+.rule-item h3 span svg {
     width: 30px;
     height: 30px;
+}
+
+.rule-item-content ul {
+    padding: 0;
+    list-style: none;
 }
 
 .rule-item-content li {
-    padding-bottom: var(--space-min);
+    padding: 0 var(--space);
+    margin-bottom: var(--space-min);
 }
 
 .rule-item-content li span {
@@ -408,4 +425,8 @@ button.red:hover {
     cursor: pointer;
     font-size: 20px;
     padding: var(--space-min);
+}
+
+.dd-active-border {
+    border: 2px dashed var(--primary-color);
 }
